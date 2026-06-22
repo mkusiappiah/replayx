@@ -1,13 +1,13 @@
 # replayx
 
-Record and replay HTTP interactions for [httpx](https://www.python-httpx.org/). Run your tests fast and offline.
+Record and replay HTTP and HTTPS interactions for [httpx](https://www.python-httpx.org/). Run your tests fast and offline.
 
 [![CI](https://github.com/mkusiappiah/replayx/actions/workflows/ci.yml/badge.svg)](https://github.com/mkusiappiah/replayx/actions/workflows/ci.yml)
 [![PyPI](https://img.shields.io/pypi/v/replayx)](https://pypi.org/project/replayx/)
 [![Python versions](https://img.shields.io/pypi/pyversions/replayx)](https://pypi.org/project/replayx/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-replayx saves real HTTP responses to a cassette file on the first test run. Every later run reads from the cassette. No network calls. No flaky tests. No slow CI.
+replayx saves real HTTP and HTTPS responses to a cassette file on the first test run. Every later run reads from the cassette. No network calls. No flaky tests. No slow CI.
 
 ```python
 import httpx
@@ -32,6 +32,16 @@ vcrpy brought record and replay to Python. vcrpy targets requests and the sync w
 | Secret redaction for committed cassettes | yes | partial |
 | Explicit transport API, no patching | yes | no |
 | Modern typing with py.typed | yes | no |
+
+## HTTPS and TLS
+
+replayx works with `https://` URLs the same as `http://`. replayx hooks into httpx at the transport layer, below TLS, so the scheme is never a special case.
+
+- On record, httpx makes the real TLS request and replayx captures the result.
+- On replay, replayx serves the response from the cassette with no network and no TLS handshake, so certificates and expiry do not matter.
+- Matching tracks the scheme and the correct default port (443 for https, 80 for http), so https and http to the same host stay distinct.
+
+replayx hooks httpx, so requests made through other clients (requests, urllib, aiohttp) are not intercepted.
 
 ## Install
 
