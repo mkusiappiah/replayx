@@ -6,6 +6,16 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.4.2] - 2026-06-22
+
+### Added
+- `Documentation` project URL pointing at the documentation site, shown on the
+  PyPI sidebar. Homepage now points at the project site.
+
+### Changed
+- README documents HTTPS and TLS support and states "HTTP and HTTPS" in the
+  intro, so the scope is clear on the PyPI page. Docs-only release.
+
 ## [0.4.1] - 2026-06-22
 
 ### Fixed
@@ -61,7 +71,8 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - A `pytest` plugin exposing the `replayx_cassette` fixture and a
   `--replayx-record` flag.
 
-[Unreleased]: https://github.com/mkusiappiah/replayx/compare/v0.4.1...HEAD
+[Unreleased]: https://github.com/mkusiappiah/replayx/compare/v0.4.2...HEAD
+[0.4.2]: https://github.com/mkusiappiah/replayx/compare/v0.4.1...v0.4.2
 [0.4.1]: https://github.com/mkusiappiah/replayx/compare/v0.4.0...v0.4.1
 [0.4.0]: https://github.com/mkusiappiah/replayx/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/mkusiappiah/replayx/compare/v0.2.0...v0.3.0
