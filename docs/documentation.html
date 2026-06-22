@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>replayx documentation</title>
+  <meta name="description" content="Detailed documentation for replayx: setup guides, record and replay, request matching, redaction, HTTPS, the pytest plugin, inline stubs, the cassette format, and an API reference." />
+  <style>
+    :root {
+      --bg: #0d1117;
+      --panel: #161b22;
+      --border: #30363d;
+      --text: #e6edf3;
+      --muted: #9da7b3;
+      --accent: #6ea8fe;
+      --code-bg: #0b0f14;
+      --green: #3fb950;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 70px; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    .topbar {
+      position: sticky; top: 0; z-index: 20;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 24px;
+      background: rgba(13, 17, 23, 0.9);
+      -webkit-backdrop-filter: blur(8px);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+    }
+    .topbar .brand { font-weight: 700; font-size: 1.1rem; }
+    .topbar .brand a { color: var(--text); }
+    .topbar nav a { margin-left: 18px; color: var(--muted); font-size: 0.95rem; }
+    .topbar nav a:hover { color: var(--text); }
+    .layout { display: flex; max-width: 1180px; margin: 0 auto; }
+    .sidebar {
+      width: 250px; flex: none;
+      position: sticky; top: 57px; align-self: flex-start;
+      height: calc(100vh - 57px); overflow-y: auto;
+      padding: 28px 16px 60px; border-right: 1px solid var(--border);
+    }
+    .sidebar h4 { color: var(--muted); text-transform: uppercase; font-size: 0.72rem; letter-spacing: 0.08em; margin: 22px 0 8px; }
+    .sidebar a { display: block; color: var(--text); padding: 5px 10px; border-radius: 6px; font-size: 0.92rem; }
+    .sidebar a:hover { background: var(--panel); text-decoration: none; }
+    .content { flex: 1; min-width: 0; padding: 36px 40px 120px; }
+    .content h1 { font-size: 2.1rem; margin: 0 0 6px; }
+    .content h2 { font-size: 1.5rem; margin: 48px 0 14px; padding-top: 8px; border-top: 1px solid var(--border); }
+    .content h2:first-of-type { border-top: none; }
+    .content h3 { font-size: 1.12rem; margin: 26px 0 8px; }
+    .lead { color: var(--muted); font-size: 1.1rem; margin: 0 0 8px; }
+    pre {
+      background: var(--code-bg); border: 1px solid var(--border); border-radius: 8px;
+      padding: 16px; overflow-x: auto; font-size: 0.88rem;
+    }
+    p code, li code, td code { background: var(--panel); border: 1px solid var(--border); border-radius: 5px; padding: 1px 6px; font-size: 0.86em; }
+    table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+    th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+    th { color: var(--muted); font-weight: 600; }
+    .note {
+      border-left: 3px solid var(--accent); background: var(--panel);
+      padding: 12px 16px; border-radius: 0 8px 8px 0; margin: 16px 0;
+    }
+    .note.warn { border-left-color: #d29922; }
+    ul { padding-left: 22px; }
+    li { margin: 4px 0; }
+    footer { border-top: 1px solid var(--border); padding: 28px 40px; color: var(--muted); font-size: 0.9rem; max-width: 1180px; margin: 0 auto; }
+    @media (max-width: 860px) {
+      .sidebar { display: none; }
+      .content { padding: 24px 20px 80px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <span class="brand"><a href="index.html">replayx</a></span>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="#installation">Docs</a>
+      <a href="https://pypi.org/project/replayx/">PyPI</a>
+      <a href="https://github.com/mkusiappiah/replayx">GitHub</a>
+    </nav>
+  </div>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <h4>Getting started</h4>
+      <a href="#overview">Overview</a>
+      <a href="#installation">Installation</a>
+      <a href="#quickstart">Quickstart</a>
+      <a href="#how-it-works">How replayx works</a>
+      <h4>Guides</h4>
+      <a href="#record-modes">Record modes</a>
+      <a href="#matching">Request matching</a>
+      <a href="#graphql">GraphQL requests</a>
+      <a href="#redaction">Redacting secrets</a>
+      <a href="#https">HTTPS and TLS</a>
+      <a href="#encoding">Content encoding</a>
+      <h4>Integrations</h4>
+      <a href="#pytest">The pytest plugin</a>
+      <a href="#stubs">Inline stubs</a>
+      <a href="#transports">Explicit transports</a>
+      <h4>Reference</h4>
+      <a href="#cassette-format">Cassette format</a>
+      <a href="#api">API reference</a>
+      <a href="#troubleshooting">Troubleshooting</a>
+      <a href="#faq">FAQ</a>
+    </aside>
+
+    <main class="content">
+      <h1>replayx documentation</h1>
+      <p class="lead">Record and replay HTTP and HTTPS interactions for httpx. Run your tests fast and offline.</p>
+
+      <h2 id="overview">Overview</h2>
+      <p>replayx saves real HTTP and HTTPS responses to a cassette file on the first test run. Every later run reads from the cassette. No network calls. No flaky tests. No slow CI.</p>
+      <p>replayx targets <a href="https://www.python-httpx.org/">httpx</a>. replayx supports the sync client, the async client, gzip and deflate bodies, secret redaction, GraphQL matching, and inline stubs. Source lives on <a href="https://github.com/mkusiappiah/replayx">GitHub</a>. Releases ship to <a href="https://pypi.org/project/replayx/">PyPI</a>.</p>
+
+      <h2 id="installation">Installation</h2>
+      <pre><code>pip install replayx</code></pre>
+      <p>YAML cassettes need one extra:</p>
+      <pre><code>pip install "replayx[yaml]"</code></pre>
+      <p>replayx needs Python 3.9 or newer and httpx 0.23 or newer. The package ships type hints and a <code>py.typed</code> marker, so strict type checkers see full signatures.</p>
+
+      <h2 id="quickstart">Quickstart</h2>
+      <p>Wrap your code in <code>use_cassette</code>. The first run records over the network. Later runs replay from the file.</p>
+      <pre><code>import httpx
+from replayx import use_cassette
+
+with use_cassette("cassettes/github.json"):
+    resp = httpx.get("https://api.github.com/users/octocat")
+    assert resp.json()["login"] == "octocat"</code></pre>
+      <p>Commit the cassette file with your tests. Your suite then runs offline and stays deterministic.</p>
+
+      <h2 id="how-it-works">How replayx works</h2>
+      <p>httpx asks <code>Client._transport_for_url</code> for a transport on every request. replayx swaps this method for the duration of a block, returns a replayx transport, and restores the original on exit. The transport follows the public httpx Transport API: a class subclassing <code>httpx.BaseTransport</code> and implementing <code>handle_request</code> (or <code>httpx.AsyncBaseTransport</code> with <code>handle_async_request</code>).</p>
+      <ul>
+        <li><strong>Cassette</strong>: a file of recorded interactions. Each interaction holds a request and a response.</li>
+        <li><strong>Transport</strong>: the object httpx calls to send a request. replayx wraps the real transport when recording and replaces the transport when replaying.</li>
+        <li><strong>Matcher</strong>: the rule pairing an incoming request with a recorded one.</li>
+      </ul>
+      <div class="note">replayx hooks httpx at the transport layer. Calls made through other clients (requests, urllib, aiohttp) are not intercepted.</div>
+
+      <h2 id="record-modes">Record modes</h2>
+      <p>Pass <code>record_mode</code> to control recording and replay. The names follow the established VCR conventions.</p>
+      <table>
+        <tr><th>Mode</th><th>What happens</th><th>When to use</th></tr>
+        <tr><td><code>once</code> (default)</td><td>Replay an existing cassette. Record everything when no cassette file exists. A new request against an existing cassette raises an error.</td><td>Most tests. Record one time, replay forever.</td></tr>
+        <tr><td><code>new_episodes</code></td><td>Replay matches and append any new interactions to the cassette.</td><td>Adding new calls to a test without re-recording the rest.</td></tr>
+        <tr><td><code>none</code></td><td>Replay only. Never reach the network. Never write. A new request raises an error.</td><td>CI, where any unmocked call should fail loudly.</td></tr>
+        <tr><td><code>all</code></td><td>Always reach the real backend and overwrite the cassette.</td><td>Re-recording after an API changes.</td></tr>
+      </table>
+      <pre><code>with use_cassette("cassettes/api.json", record_mode="none"):
+    ...</code></pre>
+
+      <h2 id="matching">Request matching</h2>
+      <p>By default replayx matches on method and url. Query order does not affect matching. Set <code>match_on</code> to change the rules. replayx combines matchers with logical AND, so an interaction matches only when every named matcher agrees.</p>
+      <pre><code>with use_cassette("cassettes/api.json", match_on=("method", "path", "body")):
+    ...</code></pre>
+      <table>
+        <tr><th>Matcher</th><th>Compares</th></tr>
+        <tr><td><code>method</code></td><td>HTTP method, case-insensitive</td></tr>
+        <tr><td><code>scheme</code></td><td>http or https</td></tr>
+        <tr><td><code>host</code></td><td>Host name</td></tr>
+        <tr><td><code>port</code></td><td>Port, with the default per scheme (443 or 80)</td></tr>
+        <tr><td><code>path</code></td><td>URL path</td></tr>
+        <tr><td><code>query</code></td><td>Query parameters, order-independent</td></tr>
+        <tr><td><code>url</code> (alias <code>uri</code>)</td><td>Scheme, host, port, path, and query together</td></tr>
+        <tr><td><code>headers</code></td><td>Request headers</td></tr>
+        <tr><td><code>body</code></td><td>Raw request body bytes</td></tr>
+        <tr><td><code>graphql</code></td><td>GraphQL operation, see below</td></tr>
+      </table>
+      <div class="note warn">A matcher you redact and match on at the same time will not line up. For example, do not match on a header you also redact.</div>
+
+      <h2 id="graphql">GraphQL requests</h2>
+      <p>GraphQL sends every operation as a POST to one URL, so raw body matching breaks on formatting. The <code>graphql</code> matcher parses the JSON body and compares the operation name, the variables, and the query with whitespace collapsed. A non-GraphQL body falls back to an exact body comparison.</p>
+      <pre><code>with use_cassette("cassettes/api.json", match_on=("method", "url", "graphql")):
+    ...</code></pre>
+      <p>So these two bodies match, because only formatting differs:</p>
+      <pre><code>{"query": "query { user { id } }"}
+{"query": "query {\n  user {\n    id\n  }\n}"}</code></pre>
+
+      <h2 id="redaction">Redacting secrets</h2>
+      <p>Cassettes are meant to be committed, so keep credentials out of them. Redaction runs at record time. The live response your code receives stays intact.</p>
+      <pre><code>with use_cassette(
+    "cassettes/api.json",
+    filter_headers=["authorization", "set-cookie"],
+    filter_query_params=["api_key", "token"],
+):
+    ...</code></pre>
+      <p>For full control, use hooks. Return a changed recording, or return <code>None</code> to skip recording the interaction.</p>
+      <pre><code>from dataclasses import replace
+
+def scrub_body(response):
+    return replace(response, body=b'{"token": "REDACTED"}')
+
+with use_cassette("cassettes/api.json", before_record_response=scrub_body):
+    ...</code></pre>
+
+      <h2 id="https">HTTPS and TLS</h2>
+      <p>replayx works with <code>https://</code> URLs the same as <code>http://</code>. replayx hooks into httpx below TLS, so the scheme is never a special case.</p>
+      <ul>
+        <li>On record, httpx makes the real TLS request and replayx captures the result.</li>
+        <li>On replay, replayx serves the response from the cassette with no network and no TLS handshake, so certificates and expiry do not matter.</li>
+        <li>Matching tracks the scheme and the correct default port, so http and https to the same host stay distinct.</li>
+      </ul>
+
+      <h2 id="encoding">Content encoding</h2>
+      <p>replayx keeps the <code>Content-Encoding</code> header and re-encodes the body on replay, so a replayed response matches a live one. gzip and deflate work with no extra dependency. brotli needs <code>brotli</code> or <code>brotlicffi</code>. zstd needs <code>zstandard</code>. A missing codec degrades gracefully: replayx drops the encoding header and serves the decoded body.</p>
+      <p>Bodies are stored decoded, so cassettes stay readable in code review even when the live API uses gzip.</p>
+
+      <h2 id="pytest">The pytest plugin</h2>
+      <p>replayx ships a pytest plugin through the <code>pytest11</code> entry point, so installing the package registers the fixture. The <code>replayx_cassette</code> fixture builds a per-test cassette path at <code>&lt;test-dir&gt;/cassettes/&lt;test-name&gt;.json</code>.</p>
+      <pre><code>import httpx
+
+def test_octocat(replayx_cassette):
+    with replayx_cassette():
+        resp = httpx.get("https://api.github.com/users/octocat")
+        assert resp.status_code == 200</code></pre>
+      <p>Override the record mode for a whole run from the command line. This is handy for re-recording in one step:</p>
+      <pre><code>pytest --replayx-record=all</code></pre>
+      <p>Set per-test defaults with the marker. The fixture forwards these to <code>use_cassette</code>:</p>
+      <pre><code>import pytest
+
+@pytest.mark.replayx(match_on=("method", "url", "body"), filter_headers=["authorization"])
+def test_create(replayx_cassette):
+    with replayx_cassette():
+        ...</code></pre>
+
+      <h2 id="stubs">Inline stubs</h2>
+      <p>Sometimes you want responses defined in code, with no recording. <code>use_stubs</code> patches httpx and serves responses from routes you declare.</p>
+      <pre><code>import httpx
+from replayx import use_stubs
+
+with use_stubs() as router:
+    router.get("https://api.example.com/users").respond(json=[{"id": 1}])
+    router.post("https://api.example.com/users").respond(201, json={"id": 2})
+
+    with httpx.Client() as client:
+        assert client.get("https://api.example.com/users").json() == [{"id": 1}]</code></pre>
+      <p>Routes match on method plus scheme, host, port, and path. The query string is ignored. A request matching no route raises <code>UnhandledStubError</code>, so unmocked calls surface at once. Each route counts its calls:</p>
+      <pre><code>with use_stubs() as router:
+    route = router.get("https://api.example.com/ping").respond(text="pong")
+    ...
+    assert route.call_count == 1</code></pre>
+
+      <h2 id="transports">Explicit transports</h2>
+      <p>If you prefer no patching, build a transport and pass the transport to your client. Nothing global changes.</p>
+      <pre><code>import httpx
+from replayx import Cassette
+
+cassette = Cassette.load("cassettes/data.json", record_mode="once")
+
+with httpx.Client(transport=cassette.sync_transport()) as client:
+    resp = client.get("https://api.example.com/data")
+
+cassette.save()</code></pre>
+      <p>Use <code>cassette.async_transport()</code> with <code>httpx.AsyncClient</code> for async code. <code>sync_transport</code> and <code>async_transport</code> take an optional <code>real=</code> transport, which replayx wraps when recording.</p>
+
+      <h2 id="cassette-format">Cassette format</h2>
+      <p>Cassettes use plain JSON by default. YAML works with the yaml extra. Both read well in a diff.</p>
+      <pre><code>{
+  "version": 1,
+  "recorded_with": "replayx/0.4.1",
+  "interactions": [
+    {
+      "request": { "method": "GET", "url": "https://api.example.com/data", "headers": [], "body": null },
+      "response": { "status_code": 200, "headers": [["content-type", "application/json"]], "body": { "text": "{\"ok\":true}" } }
+    }
+  ]
+}</code></pre>
+      <ul>
+        <li>A body is <code>null</code> when empty, <code>{"text": "..."}</code> for UTF-8 content, or <code>{"base64": "..."}</code> for binary content.</li>
+        <li>The file extension picks the serializer: <code>.json</code> by default, <code>.yaml</code> or <code>.yml</code> for YAML.</li>
+      </ul>
+
+      <h2 id="api">API reference</h2>
+      <h3>use_cassette</h3>
+      <pre><code>use_cassette(
+    path,
+    *,
+    record_mode="once",          # "once" | "new_episodes" | "none" | "all"
+    match_on=("method", "url"),
+    serializer=None,
+    allow_playback_repeats=False,
+    filter_headers=(),
+    filter_query_params=(),
+    before_record_request=None,
+    before_record_response=None,
+    patch=True,
+)</code></pre>
+      <p>A context manager yielding the active <code>Cassette</code>. Saves new interactions on exit.</p>
+
+      <h3>Cassette</h3>
+      <ul>
+        <li><code>Cassette.load(path, *, record_mode="once", match_on=(...), ...)</code> builds a cassette.</li>
+        <li><code>cassette.sync_transport(real=None)</code> and <code>cassette.async_transport(real=None)</code> return transports.</li>
+        <li><code>cassette.save()</code> writes new interactions. Returns <code>True</code> when a file is written.</li>
+      </ul>
+
+      <h3>use_stubs and StubRouter</h3>
+      <ul>
+        <li><code>use_stubs(router=None)</code> yields a <code>StubRouter</code>.</li>
+        <li><code>router.get/post/put/patch/delete/head/options(url)</code> and <code>router.route(method, url)</code> return a <code>Route</code>.</li>
+        <li><code>route.respond(status_code=200, *, json=None, text=None, content=None, headers=None)</code> sets the response.</li>
+        <li><code>route.call_count</code> reports how many requests matched the route.</li>
+      </ul>
+
+      <h3>RecordMode</h3>
+      <p>An enum with members <code>ONCE</code>, <code>NEW_EPISODES</code>, <code>NONE</code>, <code>ALL</code>. String values work everywhere a mode is accepted.</p>
+
+      <h3>Exceptions</h3>
+      <ul>
+        <li><code>ReplayxError</code>: base class for all replayx errors.</li>
+        <li><code>UnhandledRequestError</code>: a request had no matching recording in <code>none</code> mode, or in <code>once</code> mode with an existing cassette.</li>
+        <li><code>UnhandledStubError</code>: a stub router had no route for a request.</li>
+        <li><code>CassetteFormatError</code>: a cassette file could not be parsed.</li>
+      </ul>
+
+      <h2 id="troubleshooting">Troubleshooting</h2>
+      <h3>A request is not matching</h3>
+      <p>Check the matchers. The default pairs on method and url. If the request body or a query value changes per run, drop the field from <code>match_on</code> or use a looser matcher such as <code>path</code>. For GraphQL, use the <code>graphql</code> matcher.</p>
+      <h3>UnhandledRequestError on a new request</h3>
+      <p>In <code>once</code> mode with an existing cassette, and in <code>none</code> mode, a new request raises. Re-record with <code>record_mode="all"</code>, or append with <code>record_mode="new_episodes"</code>.</p>
+      <h3>The call still hits the network</h3>
+      <p>replayx intercepts httpx only. Confirm the request goes through <code>httpx</code>. A call inside <code>use_cassette</code> made with requests or aiohttp is not captured.</p>
+      <h3>The cassette is empty after a run</h3>
+      <p>replayx writes only after recording something new. In <code>none</code> mode replayx never writes. In <code>once</code> mode replayx writes the first time, then replays.</p>
+
+      <h2 id="faq">FAQ</h2>
+      <h3>Does replayx support HTTPS?</h3>
+      <p>Yes. See the <a href="#https">HTTPS and TLS</a> section. Record runs over real TLS. Replay needs no network and no certificates.</p>
+      <h3>Does replayx work with async?</h3>
+      <p>Yes. The same <code>use_cassette</code> and <code>use_stubs</code> calls work with <code>httpx.AsyncClient</code>. replayx provides both sync and async transports.</p>
+      <h3>Should I commit cassettes?</h3>
+      <p>Yes. Commit them with your tests so the suite runs offline. Redact secrets first.</p>
+      <h3>How do I re-record after an API change?</h3>
+      <p>Run with <code>record_mode="all"</code>, or with the pytest flag <code>--replayx-record=all</code>.</p>
+      <h3>How is replayx different from respx or vcrpy?</h3>
+      <p>vcrpy targets requests and the sync world. respx focuses on inline mocking. replayx is built for httpx, records and replays, supports async first, redacts secrets, and also offers inline stubs through <code>use_stubs</code>.</p>
+    </main>
+  </div>
+
+  <footer>
+    <p>replayx is open source under the MIT license. Built by Michael Kusi-Appiah. <a href="https://github.com/mkusiappiah/replayx">GitHub</a> &middot; <a href="https://pypi.org/project/replayx/">PyPI</a> &middot; <a href="index.html">Home</a></p>
+  </footer>
+</body>
+</html>
