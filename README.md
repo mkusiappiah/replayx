@@ -3,8 +3,8 @@
 Record and replay HTTP interactions for [httpx](https://www.python-httpx.org/). Run your tests fast and offline.
 
 [![CI](https://github.com/mkusiappiah/replayx/actions/workflows/ci.yml/badge.svg)](https://github.com/mkusiappiah/replayx/actions/workflows/ci.yml)
-[![PyPI](https://img.shields.io/pypi/v/replayx.svg)](https://pypi.org/project/replayx/)
-[![Python versions](https://img.shields.io/pypi/pyversions/replayx.svg)](https://pypi.org/project/replayx/)
+[![PyPI](https://img.shields.io/pypi/v/replayx)](https://pypi.org/project/replayx/)
+[![Python versions](https://img.shields.io/pypi/pyversions/replayx)](https://pypi.org/project/replayx/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 replayx saves real HTTP responses to a cassette file on the first test run. Every later run reads from the cassette. No network calls. No flaky tests. No slow CI.
