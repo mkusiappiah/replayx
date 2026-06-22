@@ -4,7 +4,7 @@ replayx is an async-native "VCR" for `httpx`: it records real HTTP responses
 to a cassette file the first time your tests run, then replays them on every
 subsequent run so tests are fast, offline and deterministic.
 
-See https://github.com/your-org/replayx for documentation.
+See https://github.com/mkusiappiah/replayx for documentation.
 """
 
 from __future__ import annotations

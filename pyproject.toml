@@ -52,10 +52,10 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/your-org/replayx"
-Repository = "https://github.com/your-org/replayx"
-Issues = "https://github.com/your-org/replayx/issues"
-Changelog = "https://github.com/your-org/replayx/blob/main/CHANGELOG.md"
+Homepage = "https://github.com/mkusiappiah/replayx"
+Repository = "https://github.com/mkusiappiah/replayx"
+Issues = "https://github.com/mkusiappiah/replayx/issues"
+Changelog = "https://github.com/mkusiappiah/replayx/blob/main/CHANGELOG.md"
 
 [project.entry-points.pytest11]
 replayx = "replayx.pytest_plugin"

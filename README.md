@@ -2,7 +2,7 @@
 
 Record and replay HTTP interactions for [httpx](https://www.python-httpx.org/). Run your tests fast and offline.
 
-[![CI](https://github.com/your-org/replayx/actions/workflows/ci.yml/badge.svg)](https://github.com/your-org/replayx/actions/workflows/ci.yml)
+[![CI](https://github.com/mkusiappiah/replayx/actions/workflows/ci.yml/badge.svg)](https://github.com/mkusiappiah/replayx/actions/workflows/ci.yml)
 [![PyPI](https://img.shields.io/pypi/v/replayx.svg)](https://pypi.org/project/replayx/)
 [![Python versions](https://img.shields.io/pypi/pyversions/replayx.svg)](https://pypi.org/project/replayx/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
@@ -187,7 +187,7 @@ replayx stores binary bodies as base64.
 I welcome contributions. Set up a dev environment:
 
 ```bash
-git clone https://github.com/your-org/replayx
+git clone https://github.com/mkusiappiah/replayx
 cd replayx
 pip install -e ".[dev]"
 pytest
