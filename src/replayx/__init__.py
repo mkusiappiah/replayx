@@ -9,7 +9,7 @@ See https://github.com/mkusiappiah/replayx for documentation.
 
 from __future__ import annotations
 
-__version__ = "0.4.0"
+__version__ = "0.4.1"
 
 from ._types import RecordMode
 from .cassette import Cassette, Interaction, RecordedRequest, RecordedResponse

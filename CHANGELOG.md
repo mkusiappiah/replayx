@@ -6,6 +6,13 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.4.1] - 2026-06-22
+
+### Fixed
+- README badges for PyPI version and Python versions. Dropped the `.svg` suffix
+  that shields.io rejected on its dynamic PyPI routes. This release also
+  refreshes the rendered README on the PyPI project page.
+
 ## [0.4.0] - 2026-06-22
 
 ### Added
@@ -54,7 +61,8 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - A `pytest` plugin exposing the `replayx_cassette` fixture and a
   `--replayx-record` flag.
 
-[Unreleased]: https://github.com/mkusiappiah/replayx/compare/v0.4.0...HEAD
+[Unreleased]: https://github.com/mkusiappiah/replayx/compare/v0.4.1...HEAD
+[0.4.1]: https://github.com/mkusiappiah/replayx/compare/v0.4.0...v0.4.1
 [0.4.0]: https://github.com/mkusiappiah/replayx/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/mkusiappiah/replayx/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/mkusiappiah/replayx/compare/v0.1.0...v0.2.0
