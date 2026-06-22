@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "replayx"
 dynamic = ["version"]
-description = "Record and replay HTTP interactions for httpx — an async-native VCR for fast, deterministic tests."
+description = "Record and replay HTTP and HTTPS interactions for httpx. An async-native VCR for fast, deterministic tests."
 readme = "README.md"
 requires-python = ">=3.9"
 license = { file = "LICENSE" }

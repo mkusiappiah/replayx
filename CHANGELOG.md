@@ -6,6 +6,12 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.4.3] - 2026-06-22
+
+### Changed
+- Package summary now reads "Record and replay HTTP and HTTPS interactions for
+  httpx." so the PyPI headline names HTTPS. Dropped the em dash.
+
 ## [0.4.2] - 2026-06-22
 
 ### Added
@@ -71,7 +77,8 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - A `pytest` plugin exposing the `replayx_cassette` fixture and a
   `--replayx-record` flag.
 
-[Unreleased]: https://github.com/mkusiappiah/replayx/compare/v0.4.2...HEAD
+[Unreleased]: https://github.com/mkusiappiah/replayx/compare/v0.4.3...HEAD
+[0.4.3]: https://github.com/mkusiappiah/replayx/compare/v0.4.2...v0.4.3
 [0.4.2]: https://github.com/mkusiappiah/replayx/compare/v0.4.1...v0.4.2
 [0.4.1]: https://github.com/mkusiappiah/replayx/compare/v0.4.0...v0.4.1
 [0.4.0]: https://github.com/mkusiappiah/replayx/compare/v0.3.0...v0.4.0
