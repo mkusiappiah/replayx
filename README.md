@@ -113,6 +113,31 @@ def test_create(replayx_cassette):
         ...
 ```
 
+## Inline stubs, no recording
+
+Sometimes you want to define responses in code instead of recording them. use_stubs patches httpx and serves responses from routes you declare.
+
+```python
+import httpx
+from replayx import use_stubs
+
+with use_stubs() as router:
+    router.get("https://api.example.com/users").respond(json=[{"id": 1}])
+    router.post("https://api.example.com/users").respond(201, json={"id": 2})
+
+    with httpx.Client() as client:
+        assert client.get("https://api.example.com/users").json() == [{"id": 1}]
+```
+
+A request that matches no route raises `UnhandledStubError`, so unmocked calls show up at once. Routes match on method plus scheme, host, port, and path. The query string is ignored. Each route counts its calls:
+
+```python
+with use_stubs() as router:
+    route = router.get("https://api.example.com/ping").respond(text="pong")
+    ...
+    assert route.call_count == 1
+```
+
 ## Record modes
 
 | Mode | What happens |

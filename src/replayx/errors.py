@@ -39,3 +39,18 @@ class UnhandledRequestError(ReplayxError):
             "  - relax the request matchers via match_on=(...)."
         )
         super().__init__(message)
+
+
+class UnhandledStubError(ReplayxError):
+    """Raised when an inline stub router has no route matching a request."""
+
+    def __init__(self, method: str, url: str, registered: int) -> None:
+        self.method = method
+        self.url = url
+        message = (
+            f"replayx: no stub matched {method} {url}\n"
+            f"  registered routes: {registered}\n"
+            "\n"
+            "Add a matching route, e.g. router.get(url).respond(json=...)."
+        )
+        super().__init__(message)

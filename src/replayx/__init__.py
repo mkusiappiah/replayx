@@ -9,12 +9,18 @@ See https://github.com/mkusiappiah/replayx for documentation.
 
 from __future__ import annotations
 
-__version__ = "0.3.0"
+__version__ = "0.4.0"
 
 from ._types import RecordMode
 from .cassette import Cassette, Interaction, RecordedRequest, RecordedResponse
-from .errors import CassetteFormatError, ReplayxError, UnhandledRequestError
+from .errors import (
+    CassetteFormatError,
+    ReplayxError,
+    UnhandledRequestError,
+    UnhandledStubError,
+)
 from .recorder import use_cassette
+from .stubs import Route, StubRouter, use_stubs
 from .transport import AsyncReplayTransport, ReplayTransport
 
 __all__ = [
@@ -27,7 +33,11 @@ __all__ = [
     "RecordedResponse",
     "ReplayTransport",
     "ReplayxError",
+    "Route",
+    "StubRouter",
     "UnhandledRequestError",
+    "UnhandledStubError",
     "__version__",
     "use_cassette",
+    "use_stubs",
 ]

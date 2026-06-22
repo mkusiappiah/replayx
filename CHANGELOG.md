@@ -6,6 +6,18 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-06-22
+
+### Added
+- Inline stubs through `use_stubs`. Declare responses in code with a
+  `StubRouter` (`router.get(url).respond(json=...)`), no cassette and no
+  network. Unmatched requests raise `UnhandledStubError`. Routes track calls
+  via `route.call_count`. Works for sync and async clients.
+
+### Changed
+- Extracted the httpx interception into a shared internal module used by both
+  `use_cassette` and `use_stubs`. No change to public behaviour.
+
 ## [0.3.0] - 2026-06-22
 
 ### Added
@@ -42,7 +54,8 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - A `pytest` plugin exposing the `replayx_cassette` fixture and a
   `--replayx-record` flag.
 
-[Unreleased]: https://github.com/mkusiappiah/replayx/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/mkusiappiah/replayx/compare/v0.4.0...HEAD
+[0.4.0]: https://github.com/mkusiappiah/replayx/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/mkusiappiah/replayx/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/mkusiappiah/replayx/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/mkusiappiah/replayx/releases/tag/v0.1.0

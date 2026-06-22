@@ -9,7 +9,7 @@ instead.
 
 from __future__ import annotations
 
-from collections.abc import Callable, Iterator, Sequence
+from collections.abc import Iterator, Sequence
 from contextlib import contextmanager
 from pathlib import Path
 
@@ -17,70 +17,10 @@ import httpx
 
 from ._types import RecordMode
 from .cassette import Cassette
-from .errors import ReplayxError
+from .patching import patch_httpx
 from .redaction import RequestHook, ResponseHook
 from .serializers import Serializer
 from .transport import AsyncReplayTransport, ReplayTransport
-
-_TRANSPORT_HOOK = "_transport_for_url"
-
-SyncTransportFor = Callable[[httpx.Client, httpx.URL], httpx.BaseTransport]
-AsyncTransportFor = Callable[[httpx.AsyncClient, httpx.URL], httpx.AsyncBaseTransport]
-
-
-class _Patcher:
-    """Temporarily intercepts httpx's per-request transport selection.
-
-    httpx asks ``Client._transport_for_url`` for a transport on every request,
-    so swapping that method lets replayx wrap whatever transport the client
-    would otherwise use — without the caller changing how clients are built.
-    """
-
-    def __init__(
-        self,
-        cassette: Cassette,
-        real_sync: httpx.BaseTransport | None,
-        real_async: httpx.AsyncBaseTransport | None,
-    ) -> None:
-        self._cassette = cassette
-        self._real_sync = real_sync
-        self._real_async = real_async
-        self._original_sync: SyncTransportFor | None = None
-        self._original_async: AsyncTransportFor | None = None
-
-    def start(self) -> None:
-        if not hasattr(httpx.Client, _TRANSPORT_HOOK):  # pragma: no cover - version guard
-            raise ReplayxError(
-                "replayx could not patch httpx (incompatible version). "
-                "Use Cassette.sync_transport()/async_transport() explicitly instead."
-            )
-
-        cassette = self._cassette
-        original_sync: SyncTransportFor = httpx.Client._transport_for_url
-        original_async: AsyncTransportFor = httpx.AsyncClient._transport_for_url
-        self._original_sync = original_sync
-        self._original_async = original_async
-        real_sync = self._real_sync
-        real_async = self._real_async
-
-        def sync_transport_for_url(client: httpx.Client, url: httpx.URL) -> httpx.BaseTransport:
-            real = real_sync if real_sync is not None else original_sync(client, url)
-            return ReplayTransport(cassette, real)
-
-        def async_transport_for_url(
-            client: httpx.AsyncClient, url: httpx.URL
-        ) -> httpx.AsyncBaseTransport:
-            real = real_async if real_async is not None else original_async(client, url)
-            return AsyncReplayTransport(cassette, real)
-
-        setattr(httpx.Client, _TRANSPORT_HOOK, sync_transport_for_url)
-        setattr(httpx.AsyncClient, _TRANSPORT_HOOK, async_transport_for_url)
-
-    def stop(self) -> None:
-        if self._original_sync is not None:
-            setattr(httpx.Client, _TRANSPORT_HOOK, self._original_sync)
-        if self._original_async is not None:
-            setattr(httpx.AsyncClient, _TRANSPORT_HOOK, self._original_async)
 
 
 @contextmanager
@@ -131,12 +71,27 @@ def use_cassette(
         before_record_response=before_record_response,
     )
 
-    patcher = _Patcher(cassette, real_sync_transport, real_async_transport) if patch else None
-    if patcher is not None:
-        patcher.start()
-    try:
-        yield cassette
-    finally:
-        if patcher is not None:
-            patcher.stop()
-        cassette.save()
+    def make_sync(
+        client: httpx.Client, url: httpx.URL, original: httpx.BaseTransport
+    ) -> httpx.BaseTransport:
+        real = real_sync_transport if real_sync_transport is not None else original
+        return ReplayTransport(cassette, real)
+
+    def make_async(
+        client: httpx.AsyncClient, url: httpx.URL, original: httpx.AsyncBaseTransport
+    ) -> httpx.AsyncBaseTransport:
+        real = real_async_transport if real_async_transport is not None else original
+        return AsyncReplayTransport(cassette, real)
+
+    if not patch:
+        try:
+            yield cassette
+        finally:
+            cassette.save()
+        return
+
+    with patch_httpx(make_sync, make_async):
+        try:
+            yield cassette
+        finally:
+            cassette.save()
