@@ -12,6 +12,7 @@ from typing import Any
 import httpx
 
 from ._types import RecordMode
+from .encoding import encode_content
 from .errors import CassetteFormatError
 from .matchers import Matcher, build_matchers
 from .redaction import (
@@ -23,7 +24,17 @@ from .redaction import (
 from .serializers import Serializer, serializer_for_path
 
 CASSETTE_VERSION = 1
-_STRIPPED_RESPONSE_HEADERS = {"content-encoding", "content-length", "transfer-encoding"}
+# Strip framing headers that no longer apply to a buffered, replayed body.
+# Keep content-encoding so replay reproduces the original wire behaviour.
+_STRIPPED_RESPONSE_HEADERS = {"content-length", "transfer-encoding"}
+
+
+def _content_encoding(headers: list[tuple[str, str]]) -> str | None:
+    for name, value in headers:
+        if name.lower() == "content-encoding":
+            return value
+    return None
+
 
 # A serialized body is ``None`` (empty), ``{"text": "..."}`` for UTF-8 content,
 # or ``{"base64": "..."}`` for binary content.
@@ -99,8 +110,8 @@ class RecordedResponse:
 
     @classmethod
     def from_httpx(cls, response: httpx.Response) -> RecordedResponse:
-        # ``response.content`` is already content-decoded by httpx, so drop the
-        # encoding/length headers to avoid double-decoding on replay.
+        # ``response.content`` is content-decoded by httpx. Keep content-encoding
+        # so replay can re-encode; drop framing headers that no longer apply.
         headers = [
             (name, value)
             for name, value in response.headers.multi_items()
@@ -119,10 +130,21 @@ class RecordedResponse:
         )
 
     def to_httpx(self, request: httpx.Request) -> httpx.Response:
+        headers = self.headers
+        body = self.body
+        encoding = _content_encoding(headers)
+        if encoding:
+            reencoded = encode_content(self.body, encoding)
+            if reencoded is None:
+                # Unknown codec or missing optional dependency: drop the header
+                # and serve the decoded body so replay still works.
+                headers = [(n, v) for n, v in headers if n.lower() != "content-encoding"]
+            else:
+                body = reencoded
         return httpx.Response(
             status_code=self.status_code,
-            headers=self.headers,
-            content=self.body,
+            headers=headers,
+            content=body,
             request=request,
         )
 

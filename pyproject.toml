@@ -83,3 +83,7 @@ select = ["E", "F", "I", "UP", "B"]
 [tool.mypy]
 strict = true
 files = ["src/replayx"]
+
+[[tool.mypy.overrides]]
+module = ["brotli", "brotlicffi", "zstandard"]
+ignore_missing_imports = true

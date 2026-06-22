@@ -6,6 +6,18 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-06-22
+
+### Added
+- Content-encoding fidelity. replayx keeps the `Content-Encoding` header and
+  re-encodes the body on replay (gzip and deflate built in, brotli and zstd
+  through optional dependencies), so replayed responses match live ones.
+
+### Changed
+- Recorded responses keep the `Content-Encoding` header instead of dropping it.
+  Bodies stay stored decoded, so cassettes remain readable. v0.1.0 cassettes
+  still replay unchanged.
+
 ## [0.1.0] - 2026-06-22
 
 ### Added
@@ -23,5 +35,6 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - A `pytest` plugin exposing the `replayx_cassette` fixture and a
   `--replayx-record` flag.
 
-[Unreleased]: https://github.com/mkusiappiah/replayx/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/mkusiappiah/replayx/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/mkusiappiah/replayx/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/mkusiappiah/replayx/releases/tag/v0.1.0
