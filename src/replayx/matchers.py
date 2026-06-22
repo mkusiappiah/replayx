@@ -7,8 +7,9 @@ logical AND; an interaction matches only if *all* configured matchers agree.
 
 from __future__ import annotations
 
+import json
 from collections.abc import Iterable
-from typing import TYPE_CHECKING, Callable
+from typing import TYPE_CHECKING, Any, Callable
 from urllib.parse import parse_qsl, urlsplit
 
 if TYPE_CHECKING:
@@ -78,6 +79,38 @@ def match_body(recorded: RecordedRequest, incoming: RecordedRequest) -> bool:
     return recorded.body == incoming.body
 
 
+def _parse_graphql(body: bytes) -> tuple[str | None, Any, Any] | None:
+    """Return (normalized query, operationName, variables) for a GraphQL body.
+
+    Returns ``None`` when the body is not a single GraphQL operation.
+    """
+
+    try:
+        data = json.loads(body)
+    except (ValueError, TypeError):
+        return None
+    if not isinstance(data, dict) or "query" not in data:
+        return None
+    query = data.get("query")
+    if isinstance(query, str):
+        query = " ".join(query.split())
+    return query, data.get("operationName"), data.get("variables") or {}
+
+
+def match_graphql(recorded: RecordedRequest, incoming: RecordedRequest) -> bool:
+    """Match a GraphQL POST on query, operationName, and variables.
+
+    The query is compared with whitespace collapsed, so formatting differences
+    do not matter. Non-GraphQL bodies fall back to an exact body comparison.
+    """
+
+    a = _parse_graphql(recorded.body)
+    b = _parse_graphql(incoming.body)
+    if a is None or b is None:
+        return recorded.body == incoming.body
+    return a == b
+
+
 REGISTRY: dict[str, Matcher] = {
     "method": match_method,
     "scheme": match_scheme,
@@ -89,6 +122,7 @@ REGISTRY: dict[str, Matcher] = {
     "uri": match_url,
     "headers": match_headers,
     "body": match_body,
+    "graphql": match_graphql,
 }
 
 

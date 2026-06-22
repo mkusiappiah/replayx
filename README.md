@@ -136,7 +136,16 @@ with use_cassette("cassettes/api.json", match_on=("method", "path", "body")):
     ...
 ```
 
-Available matchers: method, scheme, host, port, path, query, url (alias uri), headers, body.
+Available matchers: method, scheme, host, port, path, query, url (alias uri), headers, body, graphql.
+
+### GraphQL requests
+
+GraphQL sends every operation as a POST to one URL, so raw body matching breaks on formatting. The graphql matcher compares the operation name, the variables, and the query with whitespace collapsed.
+
+```python
+with use_cassette("cassettes/api.json", match_on=("method", "url", "graphql")):
+    ...
+```
 
 ## Redact secrets
 
